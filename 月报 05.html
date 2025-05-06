@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>供应链IT部4月部门月度汇报</title>
+        <style>
+            /* 全局样式 */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            }
+
+            body {
+                background-color: #f5f5f5;
+                color: #333;
+                overflow: hidden;
+                height: 100vh;
+                width: 100vw;
+            }
+
+            /* 幻灯片容器 */
+            .slide-container {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                overflow: hidden;
+            }
+
+            /* 单个幻灯片 */
+            .slide {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                transition: opacity 0.5s ease;
+                display: flex;
+                flex-direction: column;
+                background-color: white;
+            }
+
+            .slide.active {
+                opacity: 1;
+                z-index: 1;
+            }
+
+            /* 导航栏 */
+            .top-nav {
+                background-color: #2c3e50;
+                color: white;
+                display: flex;
+                justify-content: center;
+                padding: 15px 0;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .top-nav-item {
+                padding: 0 20px;
+                cursor: pointer;
+                font-size: 16px;
+                position: relative;
+                transition: all 0.3s;
+            }
+
+            .top-nav-item:hover,
+            .top-nav-item.active {
+                color: #f39c12;
+            }
+
+            .top-nav-item.active:after {
+                content: '';
+                position: absolute;
+                bottom: -15px;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background-color: #f39c12;
+            }
+
+            /* 侧边导航 */
+            .side-nav {
+                width: 250px;
+                background-color: #34495e;
+                color: white;
+                padding: 20px 0;
+                height: calc(100% - 50px);
+                overflow-y: auto;
+            }
+
+            .side-nav-item {
+                padding: 12px 20px;
+                cursor: pointer;
+                transition: all 0.3s;
+                border-left: 4px solid transparent;
+            }
+
+            .side-nav-item:hover,
+            .side-nav-item.active {
+                background-color: #2c3e50;
+                border-left-color: #f39c12;
+            }
+
+            /* 内容区域 */
+            .content-container {
+                display: flex;
+                flex: 1;
+                overflow: hidden;
+            }
+
+            .content {
+                flex: 1;
+                padding: 30px;
+                overflow-y: auto;
+                background-color: white;
+            }
+
+            /* 首页和致谢页样式 */
+            .cover,
+            .thanks {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                text-align: center;
+                background-size: cover;
+                background-position: center;
+                color: white;
+                position: relative;
+            }
+
+            .cover::before,
+            .thanks::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 0;
+            }
+
+            .cover-content,
+            .thanks-content {
+                position: relative;
+                z-index: 1;
+                padding: 20px;
+                background-color: rgba(0, 0, 0, 0.7);
+                border-radius: 10px;
+                max-width: 80%;
+            }
+
+            .logo {
+                max-width: 300px;
+                margin-bottom: 30px;
+            }
+
+            .cover h1 {
+                font-size: 36px;
+                margin-bottom: 20px;
+                color: white;
+            }
+
+            .cover p {
+                font-size: 18px;
+                margin-bottom: 10px;
+                color: #ddd;
+            }
+
+            .thanks h1 {
+                font-size: 48px;
+                margin-bottom: 20px;
+            }
+
+            /* 导航按钮 */
+            .nav-buttons {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 100;
+                display: flex;
+            }
+
+            .nav-button {
+                width: 40px;
+                height: 40px;
+                background-color: #2c3e50;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                margin: 0 5px;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 20px;
+                transition: all 0.3s;
+            }
+
+            .nav-button:hover {
+                background-color: #f39c12;
+            }
+
+            /* 表格样式 */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+            }
+
+            table,
+            th,
+            td {
+                border: 1px solid #ddd;
+            }
+
+            th,
+            td {
+                padding: 12px 15px;
+                text-align: left;
+            }
+
+            th {
+                background-color: #2c3e50;
+                color: white;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            /* 内容样式 */
+            h1,
+            h2,
+            h3,
+            h4 {
+                color: #2c3e50;
+                margin-bottom: 15px;
+            }
+
+            h1 {
+                font-size: 28px;
+                border-bottom: 2px solid #f39c12;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+            h2 {
+                font-size: 24px;
+                margin-top: 30px;
+            }
+
+            h3 {
+                font-size: 20px;
+                margin-top: 25px;
+            }
+
+            p,
+            li {
+                line-height: 1.6;
+                margin-bottom: 10px;
+            }
+
+            ul,
+            ol {
+                margin-left: 20px;
+                margin-bottom: 20px;
+            }
+
+            hr {
+                margin: 20px 0;
+                border: none;
+                border-top: 1px solid #ddd;
+            }
+
+            /* 强调文本 */
+            strong {
+                color: #e74c3c;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="slide-container" id="slideContainer">
+            <!-- 首页（封面页） -->
+            <div class="slide active" id="cover">
+                <div class="cover"
+                    style="background-image: url('https://marketplace.canva.com/EAFKHDgkyJE/2/0/1131w/canva-gray-%26-blue-modern-business-poster-azGZryAUFGo.jpg');">
+                    <div class="cover-content">
+                        <img src="https://i.imgur.com/qWC0Qqn.png" alt="JinkoSolar Logo" class="logo">
+                        <h1>供应链IT部4月部门月度汇报</h1>
+                        <p>主讲人：华光</p>
+                        <p>时间：2025 年 4 月</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 部门能力建设 - 需求管理改善 -->
+            <div class="slide" id="slide-1-1">
+                <div class="top-nav">
+                    <div class="top-nav-item active" onclick="switchMainSection(0)">部门能力建设</div>
+                    <div class="top-nav-item" onclick="switchMainSection(1)">用户服务工作</div>
+                </div>
+                <div class="content-container">
+                    <div class="side-nav">
+                        <div class="side-nav-item active" onclick="switchSlide('slide-1-1')">需求管理改善</div>
+                    </div>
+                    <div class="content">
+                        <h2>当前存在的问题</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>编号</th>
+                                    <th>问题描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><strong>RDM使用率低</strong>：用户主要采用表格进行需求登记，RDM系统的使用率不高。</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td><strong>需求管理方式不统一</strong>：各产品线需求管理办法存在差异，缺乏统一标准，难以全局汇总和分析需求进展。</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td><strong>重点需求识别能力不足</strong>：在识别和优先级排序重点需求方面存在短板。</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td><strong>协作模式混乱</strong>：数字化专员、ITBP及系统用户之间协作机制不清晰，导致进度不透明、需求遗漏、重复登记及传递效率低下。</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td><strong>RDM报表管理能力薄弱</strong>：RDM系统在需求报表管理方面功能不足，影响数据分析和决策。</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td><strong>需求提报权限不规范</strong>：RDM中提报需求时可随意修改ITBP，影响需求流转规范性。</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td><strong>过渡管理机制不完善</strong>：RDM与多维表结合管理的过渡机制尚未成熟，管理方式有待优化。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+
+                        <h2>改进建议与管理措施</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>编号</th>
+                                    <th>改进措施</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><strong>完善需求管理流程</strong>：建立统一的多维表管理要求，明确需求登记、跟踪和汇总规范。</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td><strong>优化需求登记方式</strong>：推动RDM与多维表结合管理，采用"RDM转记多维表+直接多维表登记"双轨模式，通过定期例会与用户回顾需求，确保需求完整与准确。
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td><strong>加强重点需求识别</strong>：建立重点需求识别和优先级排序机制，提升资源配置与响应效率。</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td><strong>规范协作模式</strong>：明确数字化专员、ITBP、系统用户的职责分工，形成高效协同机制，提升需求传递与处理效率。</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td><strong>提升RDM报表能力</strong>：加强RDM在报表管理和数据分析方面的功能，满足管理层全局掌控需求。</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td><strong>逐步推广RDM全量管理</strong>：制定RDM推广计划，逐步减少表格登记，最终实现全部需求在RDM系统内管理。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户服务工作 - 采购海外报关文件核对 AI 场景梳理 -->
+            <div class="slide" id="slide-2-1">
+                <div class="top-nav">
+                    <div class="top-nav-item" onclick="switchMainSection(0)">部门能力建设</div>
+                    <div class="top-nav-item active" onclick="switchMainSection(1)">用户服务工作</div>
+                </div>
+                <div class="content-container">
+                    <div class="side-nav">
+                        <div class="side-nav-item active" onclick="switchSlide('slide-2-1')">采购海外报关文件核对 AI 场景梳理</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-2')">美国工厂上线支持</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-3')">单证提效</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-4')">TMS移动端拓展</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-5')">关务数据质量问题推进</div>
+                    </div>
+                    <div class="content">
+                        <h1>2.2 采购海外报关文件核对 AI 场景梳理</h1>
+
+                        <h2>2.2.1 目标</h2>
+                        <ul>
+                            <li>集成AI产品团队的技术能力，自动解析海外采购报关文件。</li>
+                            <li>智能识别报关文件中的关键字段，提升数据提取的准确性和效率。</li>
+                            <li>支持采购业务自动核对，完成报关数据的自动化检查，降低人工核对成本和出错风险。</li>
+                        </ul>
+
+                        <h2>2.2.2 进展</h2>
+                        <ul>
+                            <li>已完成越南采购业务的访谈调研，详细梳理了相关报关文件的结构与细节。</li>
+                            <li>与AI产品团队对接，明确技术实现的可行路径，并对主要功能点进行了确认。</li>
+                            <li>计划于4月底前，确定详细的实现方案及后续推进计划。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户服务工作 - 美国工厂上线支持 -->
+            <div class="slide" id="slide-2-2">
+                <div class="top-nav">
+                    <div class="top-nav-item" onclick="switchMainSection(0)">部门能力建设</div>
+                    <div class="top-nav-item active" onclick="switchMainSection(1)">用户服务工作</div>
+                </div>
+                <div class="content-container">
+                    <div class="side-nav">
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-1')">采购海外报关文件核对 AI 场景梳理</div>
+                        <div class="side-nav-item active" onclick="switchSlide('slide-2-2')">美国工厂上线支持</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-3')">单证提效</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-4')">TMS移动端拓展</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-5')">关务数据质量问题推进</div>
+                    </div>
+                    <div class="content">
+                        <h1>2.3 美国工厂上线支持</h1>
+
+                        <h2>2.3.1 目标</h2>
+                        <ul>
+                            <li>推广供应商送货对接美国工厂，实现供应链流程数字化。</li>
+                            <li>提升美国工厂的收货效率，优化入厂物流管理。</li>
+                        </ul>
+
+                        <h2>2.3.2 进展</h2>
+                        <ul>
+                            <li>2025年4月8日，已顺利完成系统切换，支持美国工厂上线。</li>
+                            <li>目前已有3家供应商通过新系统完成了10单线上协同送货。</li>
+                            <li>计划于4月底前，完成剩余5家生产材料供应商的系统培训，确保全部供应商具备线上操作能力。</li>
+                            <li>上线初期安排晚间值班，运维团队可及时响应并处理系统报障，保障系统稳定运行。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户服务工作 - 单证提效 -->
+            <div class="slide" id="slide-2-3">
+                <div class="top-nav">
+                    <div class="top-nav-item" onclick="switchMainSection(0)">部门能力建设</div>
+                    <div class="top-nav-item active" onclick="switchMainSection(1)">用户服务工作</div>
+                </div>
+                <div class="content-container">
+                    <div class="side-nav">
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-1')">采购海外报关文件核对 AI 场景梳理</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-2')">美国工厂上线支持</div>
+                        <div class="side-nav-item active" onclick="switchSlide('slide-2-3')">单证提效</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-4')">TMS移动端拓展</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-5')">关务数据质量问题推进</div>
+                    </div>
+                    <div class="content">
+                        <h2>二、单证内容比对提效，规避贸易风险</h2>
+
+                        <h3>场景背景</h3>
+                        <ul>
+                            <li><strong>问题描述</strong>：提单离港日期与实际离港时间不同，导致部分贸易条款POD日期不一致，引发贸易合规风险。物流运营人员需核对每个提单中的离港日期与实际ATD的差异，并进行追踪及修正。
+                            </li>
+                        </ul>
+
+                        <hr>
+
+                        <h3>业务流程与方案结构</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>环节</th>
+                                    <th>主要内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>对比内容</strong></td>
+                                    <td>提单离港日期与实际离港ATD日期差异对比</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>目标</strong></td>
+                                    <td>- 提单正本及电放文件上传至TMS<br>- 通过AI识别提单中离港日期与ATD差异，提前2-3天预警<br>- 提醒业务追踪问题</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>外部AI模型测试</strong></td>
+                                    <td>- 针对英文文件，离港日期表达方式及位置不固定<br>- 通过qwen-long模型识别离港日期，5种不同船公司的样本均能减少放货或放箱带来的返还问题</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>内部AI模型测试</strong></td>
+                                    <td>- 相同文件通过自有五个模型进行测试<br>- 针对不同文件需逐步优化识别流程</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+
+                        <h3>效果评估</h3>
+                        <ul>
+                            <li><strong>2024年单证量</strong>：16,554单</li>
+                            <li><strong>原操作方式</strong>：每单核对1分钟，共计275.9小时</li>
+                            <li><strong>新方案优化</strong>：
+                                <ul>
+                                    <li>用户只需排查差异天数大于3天的数据，人工投入仅为原来的5%</li>
+                                    <li>仅需对需追踪的单据进行核查确认</li>
+                                    <li>预计2024年度可节省约262小时人工核查时间</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户服务工作 - TMS移动端拓展 -->
+            <div class="slide" id="slide-2-4">
+                <div class="top-nav">
+                    <div class="top-nav-item" onclick="switchMainSection(0)">部门能力建设</div>
+                    <div class="top-nav-item active" onclick="switchMainSection(1)">用户服务工作</div>
+                </div>
+                <div class="content-container">
+                    <div class="side-nav">
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-1')">采购海外报关文件核对 AI 场景梳理</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-2')">美国工厂上线支持</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-3')">单证提效</div>
+                        <div class="side-nav-item active" onclick="switchSlide('slide-2-4')">TMS移动端拓展</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-5')">关务数据质量问题推进</div>
+                    </div>
+                    <div class="content">
+                        <h2>需求背景</h2>
+                        <ul>
+                            <li>驻地客户人员减编，无法承担代签、催签的职责，部分职能需向物流运营转移。</li>
+                            <li>通过移动端实现客户自主签收功能，极为迫切。</li>
+                        </ul>
+
+                        <hr>
+
+                        <h2>预期目标</h2>
+                        <ul>
+                            <li>电子签收后，预计可减少现场售后驻场人员20%的工作量。</li>
+                            <li>北/东/南三大区预计合计节约约6个驻场人员人力。</li>
+                        </ul>
+
+                        <hr>
+
+                        <h2>是否达成</h2>
+                        <ul>
+                            <li>是</li>
+                        </ul>
+
+                        <hr>
+
+                        <h2>后续优化项</h2>
+                        <ul>
+                            <li>阿里短信平台暂时无法发送移动运营商手机号短信，正在跟进处理中。</li>
+                        </ul>
+
+                        <hr>
+
+                        <h2>主要功能结构</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>功能模块</th>
+                                    <th>说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>自主注册自动权限分配</td>
+                                    <td>客户可自主注册，系统自动分配权限</td>
+                                </tr>
+                                <tr>
+                                    <td>登录系统</td>
+                                    <td>支持验证码或短信动态码验证登录</td>
+                                </tr>
+                                <tr>
+                                    <td>功能清单</td>
+                                    <td>展示运输管理、车辆进出统计等主要功能</td>
+                                </tr>
+                                <tr>
+                                    <td>合同维护信息与车辆明细</td>
+                                    <td>支持合同信息总览及车辆明细查询</td>
+                                </tr>
+                                <tr>
+                                    <td>签收确认</td>
+                                    <td>支持异常或正常签收，生成电子送货单</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <hr>
+
+                        <h2>主要界面示例</h2>
+                        <ol>
+                            <li><strong>自主注册自动权限分配界面</strong><br>- 用户输入手机号注册，系统自动分配权限</li>
+                            <li><strong>登录系统界面</strong><br>- 支持验证码或短信动态码验证</li>
+                            <li><strong>功能清单界面</strong><br>- 展示运输管理、车辆进出统计等功能</li>
+                            <li><strong>合同维护与车辆明细查询界面</strong><br>- 查看合同维护信息总览和车辆明细</li>
+                            <li><strong>签收确认界面</strong><br>- 支持异常或正常签收，生成电子送货单</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户服务工作 - 关务数据质量问题推进 -->
+            <div class="slide" id="slide-2-5">
+                <div class="top-nav">
+                    <div class="top-nav-item" onclick="switchMainSection(0)">部门能力建设</div>
+                    <div class="top-nav-item active" onclick="switchMainSection(1)">用户服务工作</div>
+                </div>
+                <div class="content-container">
+                    <div class="side-nav">
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-1')">采购海外报关文件核对 AI 场景梳理</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-2')">美国工厂上线支持</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-3')">单证提效</div>
+                        <div class="side-nav-item" onclick="switchSlide('slide-2-4')">TMS移动端拓展</div>
+                        <div class="side-nav-item active" onclick="switchSlide('slide-2-5')">关务数据质量问题推进</div>
+                    </div>
+                    <div class="content">
+                        <h1>关务数据质量问题推进</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>相关数据</th>
+                                    <th>影响</th>
+                                    <th>根因</th>
+                                    <th>业务相关方</th>
+                                    <th>IT相关方</th>
+                                    <th>建议</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>框型、计费规则等影响运费计算的要素</td>
+                                    <td>变更影响运费计算的要素时，导致申报运费与实际运费有差异或容易出现合规风险</td>
+                                    <td>1. 物流允许在事后调整计费规则、框型等要素，导致申报运费与实际运费产生差异<br>2. 物流采购对基础计费规则维护不正确，导致运费计算错误</td>
+                                    <td>物流运营、贸易合规、关务</td>
+                                    <td>供应链IT</td>
+                                    <td>确定与运费相关要素的变更规范和风险控制，改善申报与实际运费差异产生的问题，并最终落实到系统处置</td>
+                                </tr>
+                                <tr>
+                                    <td>数量</td>
+                                    <td>造成净重毛重倒挂，造成流量反复</td>
+                                    <td>物流五指与OFD制作形式发票的流程仍然处于线下，导致OFD原单或合并出错，致使数量错误、导致单单净重数量计算出的总净重倒挂</td>
+                                    <td>OFD、物流运营</td>
+                                    <td>规划架构部、供应链IT</td>
+                                    <td>建议业务提出诉求将该部分业务线上化</td>
+                                </tr>
+                                <tr>
+                                    <td>交货单</td>
+                                    <td>交货单删除未有效通知关务，导致关务仍然操作，出现单证锁价分歧的情况</td>
+                                    <td>OFD删除交货单未有效通知关务</td>
+                                    <td>OFD、关务</td>
+                                    <td>规划架构部、供应链IT</td>
+                                    <td>建议业务提出诉求将该部分业务线上化</td>
+                                </tr>
+                                <tr>
+                                    <td>提单号</td>
+                                    <td>关务搜索不到单证</td>
+                                    <td>提单号变更的情况下，未告知关务原单号</td>
+                                    <td>物流运营、关务</td>
+                                    <td>供应链IT</td>
+                                    <td>将BC号作为唯一标识放入TMS邮件中，便于管理业务单证</td>
+                                </tr>
+                                <tr>
+                                    <td>价格</td>
+                                    <td>锁价分歧</td>
+                                    <td>财务未维护关联方价格</td>
+                                    <td>财务、关务</td>
+                                    <td>规划架构部、供应链IT</td>
+                                    <td>在交货单制作前，需有业务流程控制价格进行维护</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 致谢页 -->
+            <div class="slide" id="thanks">
+                <div class="thanks"
+                    style="background-image: url('https://marketplace.canva.com/EAFKHDgkyJE/2/0/1131w/canva-gray-%26-blue-modern-business-poster-azGZryAUFGo.jpg');">
+                    <div class="thanks-content">
+                        <h1>谢谢<br>Thanks</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 导航按钮 -->
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="prevSlide()">←</button>
+            <button class="nav-button" onclick="nextSlide()">→</button>
+        </div>
+
+        <script>
+            // 定义幻灯片数据结构
+            const slideStructure = {
+                mainSections: [
+                    {
+                        title: "部门能力建设",
+                        subSections: [
+                            { id: "slide-1-1", title: "需求管理改善" }
+                        ]
+                    },
+                    {
+                        title: "用户服务工作",
+                        subSections: [
+                            { id: "slide-2-1", title: "采购海外报关文件核对 AI 场景梳理" },
+                            { id: "slide-2-2", title: "美国工厂上线支持" },
+                            { id: "slide-2-3", title: "单证提效" },
+                            { id: "slide-2-4", title: "TMS移动端拓展" },
+                            { id: "slide-2-5", title: "关务数据质量问题推进" }
+                        ]
+                    }
+                ]
+            };
+
+            // 当前幻灯片索引
+            let currentMainSection = 0;
+            let currentSubSection = 0;
+
+            // 获取所有幻灯片
+            const slides = document.querySelectorAll('.slide');
+
+            // 切换到指定幻灯片
+            function switchSlide(slideId) {
+                // 移除所有幻灯片的active类
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+
+                // 为指定幻灯片添加active类
+                document.getElementById(slideId).classList.add('active');
+
+                // 更新侧边导航高亮
+                updateSideNavHighlight(slideId);
+
+                // 更新当前索引
+                updateCurrentIndices(slideId);
+            }
+
+            // 更新当前索引
+            function updateCurrentIndices(slideId) {
+                // 特殊处理首页和致谢页
+                if (slideId === 'cover' || slideId === 'thanks') {
+                    return;
+                }
+
+                // 解析slideId获取主区域和子区域索引
+                const parts = slideId.split('-');
+                currentMainSection = parseInt(parts[1]) - 1;
+                currentSubSection = parseInt(parts[2]) - 1;
+            }
+
+            // 更新侧边导航高亮
+            function updateSideNavHighlight(slideId) {
+                // 移除所有侧边导航项的active类
+                document.querySelectorAll('.side-nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // 为当前幻灯片对应的侧边导航项添加active类
+                const sideNavItems = document.querySelectorAll('.side-nav-item');
+                sideNavItems.forEach(item => {
+                    if (item.getAttribute('onclick').includes(slideId)) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+
+            // 切换到主区域
+            function switchMainSection(index) {
+                currentMainSection = index;
+                currentSubSection = 0;
+
+                // 构建目标幻灯片ID
+                const targetSlideId = `slide-${currentMainSection + 1}-${currentSubSection + 1}`;
+
+                // 切换到目标幻灯片
+                switchSlide(targetSlideId);
+
+                // 更新顶部导航高亮
+                updateTopNavHighlight();
+            }
+
+            // 更新顶部导航高亮
+            function updateTopNavHighlight() {
+                // 移除所有顶部导航项的active类
+                document.querySelectorAll('.top-nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // 为当前主区域对应的顶部导航项添加active类
+                document.querySelectorAll('.top-nav-item')[currentMainSection].classList.add('active');
+            }
+
+            // 切换到下一张幻灯片
+            function nextSlide() {
+                const currentSlide = document.querySelector('.slide.active');
+                const currentId = currentSlide.id;
+
+                // 如果当前是封面页，切换到第一个内容页
+                if (currentId === 'cover') {
+                    switchSlide('slide-1-1');
+                    return;
+                }
+
+                // 如果当前是最后一个子区域的最后一页，切换到致谢页
+                if (currentMainSection === slideStructure.mainSections.length - 1 &&
+                    currentSubSection === slideStructure.mainSections[currentMainSection].subSections.length - 1) {
+                    switchSlide('thanks');
+                    return;
+                }
+
+                // 如果当前是当前主区域的最后一个子区域，切换到下一个主区域的第一个子区域
+                if (currentSubSection === slideStructure.mainSections[currentMainSection].subSections.length - 1) {
+                    currentMainSection++;
+                    currentSubSection = 0;
+                } else {
+                    // 否则切换到当前主区域的下一个子区域
+                    currentSubSection++;
+                }
+
+                // 构建目标幻灯片ID
+                const targetSlideId = `slide-${currentMainSection + 1}-${currentSubSection + 1}`;
+
+                // 切换到目标幻灯片
+                switchSlide(targetSlideId);
+
+                // 更新顶部导航高亮
+                updateTopNavHighlight();
+            }
+
+            // 切换到上一张幻灯片
+            function prevSlide() {
+                const currentSlide = document.querySelector('.slide.active');
+                const currentId = currentSlide.id;
+
+                // 如果当前是致谢页，切换到最后一个内容页
+                if (currentId === 'thanks') {
+                    currentMainSection = slideStructure.mainSections.length - 1;
+                    currentSubSection = slideStructure.mainSections[currentMainSection].subSections.length - 1;
+
+                    const targetSlideId = `slide-${currentMainSection + 1}-${currentSubSection + 1}`;
+                    switchSlide(targetSlideId);
+                    updateTopNavHighlight();
+                    return;
+                }
+
+                // 如果当前是第一个主区域的第一个子区域，切换到封面页
+                if (currentMainSection === 0 && currentSubSection === 0) {
+                    switchSlide('cover');
+                    return;
+                }
+
+                // 如果当前是当前主区域的第一个子区域，切换到上一个主区域的最后一个子区域
+                if (currentSubSection === 0) {
+                    currentMainSection--;
+                    currentSubSection = slideStructure.mainSections[currentMainSection].subSections.length - 1;
+                } else {
+                    // 否则切换到当前主区域的上一个子区域
+                    currentSubSection--;
+                }
+
+                // 构建目标幻灯片ID
+                const targetSlideId = `slide-${currentMainSection + 1}-${currentSubSection + 1}`;
+
+                // 切换到目标幻灯片
+                switchSlide(targetSlideId);
+
+                // 更新顶部导航高亮
+                updateTopNavHighlight();
+            }
+
+            // 键盘事件监听
+            document.addEventListener('keydown', function (event) {
+                switch (event.key) {
+                    case 'ArrowRight':
+                        nextSlide();
+                        break;
+                    case 'ArrowLeft':
+                        prevSlide();
+                        break;
+                    case 'ArrowDown':
+                        // 如果不是封面页或致谢页，切换到下一个子区域
+                        const currentSlide = document.querySelector('.slide.active');
+                        const currentId = currentSlide.id;
+                        if (currentId !== 'cover' && currentId !== 'thanks' &&
+                            currentSubSection < slideStructure.mainSections[currentMainSection].subSections.length - 1) {
+                            currentSubSection++;
+                            const targetSlideId = `slide-${currentMainSection + 1}-${currentSubSection + 1}`;
+                            switchSlide(targetSlideId);
+                        }
+                        break;
+                    case 'ArrowUp':
+                        // 如果不是封面页或致谢页，切换到上一个子区域
+                        const currentSlide2 = document.querySelector('.slide.active');
+                        const currentId2 = currentSlide2.id;
+                        if (currentId2 !== 'cover' && currentId2 !== 'thanks' && currentSubSection > 0) {
+                            currentSubSection--;
+                            const targetSlideId = `slide-${currentMainSection + 1}-${currentSubSection + 1}`;
+                            switchSlide(targetSlideId);
+                        }
+                        break;
+                }
+            });
+        </script>
+    </body>
+
+</html>
