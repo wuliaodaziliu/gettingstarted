@@ -1,0 +1,5 @@
+# 不让Claude访问的文件​
+.env​
+*.key​
+secrets/​
+config/production.json
