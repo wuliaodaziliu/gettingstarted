@@ -1,17 +1,16 @@
 [
   {
-    "key": "cmd+shift+c",
+    "key": "control+shift+c",
     "command": "workbench.action.tasks.runTask",
     "args": "Claude Code: 启动交互模式"
   },
   {
-    "key": "cmd+shift+r",
+    "key": "control+shift+r",
     "command": "workbench.action.tasks.runTask",
     "args": "Claude Code: 审查当前文件"
   },
   {
-    "key": "cmd+shift+e",
+    "key": "control+shift+e",
     "command": "workbench.action.tasks.runTask",
-    "args": "Claude Code: 解释当前文件"
-  }
+    "args": "Claude Code: 解释当前文件"  }
 ]
