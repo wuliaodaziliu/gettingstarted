@@ -1,0 +1,36 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Claude Code: 启动交互模式",
+            "type": "shell",
+            "command": "claude",
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "Claude Code: 审查当前文件",
+            "type": "shell",
+            "command": "claude \"Review ${relativeFile} and suggest improvements\"",
+            "problemMatcher": []
+        },
+        {
+            "label": "Claude Code: 解释当前文件",
+            "type": "shell",
+            "command": "claude \"Explain what ${relativeFile} does\"",
+            "problemMatcher": []
+        },
+        {
+            "label": "Claude Code: 生成测试",
+            "type": "shell",
+            "command": "claude \"Generate unit tests for ${relativeFile}\"",
+            "problemMatcher": []
+        }
+    ]
+}
